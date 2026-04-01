@@ -1,4 +1,11 @@
 FROM docker.io/iicm/lunatv:dev AS app-donor
+FROM golang:1.25-alpine AS builder-bak
+
+RUN apk add --no-cache git gcc musl-dev sqlite-dev
+WORKDIR /build
+RUN git clone https://github.com/laboratorys/backup2gh.git .
+RUN CGO_ENABLED=1 GOOS=linux go build -o backup2gh .
+
 FROM node:20-alpine AS runner
 RUN apk add --no-cache git libc6-compat sqlite curl
 
@@ -15,12 +22,9 @@ RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
 
 COPY --from=app-donor --chown=nextjs:nodejs /app/ ./
 
-RUN curl -L "https://github.com/laboratorys/backup2gh/releases/latest/download/backup2gh-linux-amd64.tar.gz" -o backup2gh.tar.gz \
-    && tar -xzf backup2gh.tar.gz \
-    && rm backup2gh.tar.gz \
-    && chmod +x /app/backup2gh \
-    && chown nextjs:nodejs /app/backup2gh \
-    && apk del curl
+COPY --from=builder-bak --chown=10014:10014 /build/backup2gh /app/backup2gh
+
+RUN chmod +x /app/entrypoint.sh /app/backup2gh
 
 COPY --chown=nextjs:nodejs entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh

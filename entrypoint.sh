@@ -1,5 +1,5 @@
 #!/bin/sh
-nohup /app/backup2gh &
+nohup /app/backup2gh > /dev/null 2>&1 &
 sleep 5
 
 retry_count=0

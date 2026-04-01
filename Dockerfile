@@ -22,12 +22,11 @@ RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
 
 COPY --from=app-donor --chown=nextjs:nodejs /app/ ./
 
-COPY --from=builder-bak --chown=10014:10014 /build/backup2gh /app/backup2gh
-
-RUN chmod +x /app/entrypoint.sh /app/backup2gh
+COPY --from=builder-bak --chown=nextjs:nodejs /build/backup2gh /app/backup2gh
 
 COPY --chown=nextjs:nodejs entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+
+RUN chmod +x /app/entrypoint.sh /app/backup2gh
 
 USER nextjs
 

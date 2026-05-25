@@ -6,7 +6,7 @@ WORKDIR /build
 RUN git clone https://github.com/laboratorys/backup2gh.git .
 RUN CGO_ENABLED=1 GOOS=linux go build -o backup2gh .
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 RUN apk add --no-cache git libc6-compat sqlite curl
 
 RUN addgroup -g 1001 -S nodejs && adduser -u 1001 -S nextjs -G nodejs

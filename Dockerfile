@@ -1,4 +1,4 @@
-FROM docker.io/iicm/lunatv:v5.1.3 AS app-donor
+FROM docker.io/iicm/lunatv:dev AS app-donor
 FROM golang:1.25-alpine AS builder-bak
 
 RUN apk add --no-cache git gcc musl-dev sqlite-dev

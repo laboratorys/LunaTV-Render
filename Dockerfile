@@ -4,7 +4,7 @@ FROM golang:1.25-alpine AS builder-bak
 RUN apk add --no-cache git gcc musl-dev sqlite-dev
 WORKDIR /build
 RUN git clone https://github.com/laboratorys/backup2gh.git .
-RUN CGO_ENABLED=1 GOOS=linux go build -o backup2gh .
+RUN CGO_ENABLED=0 GOOS=linux go build -o backup2gh .
 
 FROM node:22-alpine AS runner
 RUN apk add --no-cache git libc6-compat sqlite curl

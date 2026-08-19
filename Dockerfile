@@ -1,10 +1,10 @@
 FROM docker.io/iicm/lunatv:dev AS app-donor
-FROM golang:1.25-alpine AS builder-bak
+FROM golang:1.26-alpine AS builder-bak
 
 RUN apk add --no-cache git gcc musl-dev sqlite-dev
 WORKDIR /build
 RUN git clone https://github.com/laboratorys/backup2gh.git .
-RUN CGO_ENABLED=0 GOOS=linux go build -o backup2gh .
+RUN GOOS=linux go build -o backup2gh .
 
 FROM node:22-alpine AS runner
 RUN apk add --no-cache git libc6-compat sqlite curl
@@ -15,7 +15,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
-ENV DOCKER_ENV=true
+ENV DOCKER_ENV=true-
 ENV SQLITE_PATH=/app/data/tv.db
 
 RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
